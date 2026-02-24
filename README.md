@@ -142,6 +142,12 @@ npm test
 4. 推送到分支 (`git push origin feature/amazing-feature`)
 5. 打开 Pull Request
 
+## 操作命令
+
+```bash
+node ace migration:fresh --seed
+```
+
 ## 许可证
 
 本项目使用 UNLICENSED 许可证。
