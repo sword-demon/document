@@ -3,6 +3,8 @@ import Category from '#models/category'
 
 export const CategoryFactory = factory
   .define(Category, async ({ faker }) => {
-    return {}
+    return {
+      title: faker.lorem.sentence(),
+    }
   })
   .build()
