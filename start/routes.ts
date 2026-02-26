@@ -9,8 +9,14 @@
 
 import router from '@adonisjs/core/services/router'
 
-router.get('/', async () => {
-  return {
-    hello: 'world',
-  }
-})
+router.get('/', async () => 'welcome')
+
+// router.get('/category', async () => {})
+// router.post('/category', async () => {})
+// router.put('/category/{id}', async () => {})
+// router.delete('/category/{id}', async () => {})
+
+// 表示只有 api 路由
+// 动态加载，按需加载
+const CategoriesController = () => import('#controllers/categories_controller')
+router.resource('category', CategoriesController).apiOnly()
