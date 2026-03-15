@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine'
-import { formValidator } from './zh/form_validator.js'
+import { FormValidator, formValidator } from './zh/form_validator.js'
 // import { validateMessageProvider } from './zh/form_validator.js'
 
 // export const createCategoryValidator = vine.compile(
@@ -18,6 +18,7 @@ const fileds = {
   title: '栏目名称',
 }
 
-export const createCategoryValidator = formValidator(rules, {}, fileds)
+// export const createCategoryValidator = formValidator(rules, {}, fileds)
+export const createCategoryValidator = FormValidator.rules(rules)
 
 export const updateCategoryValidator = formValidator({ ...rules }, {}, fileds)
