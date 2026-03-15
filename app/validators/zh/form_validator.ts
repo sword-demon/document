@@ -26,15 +26,15 @@ export const formValidator = (rules: Record<string, any>, messages = {}, fields 
   }
 }
 
-export class FormValidator {
+export class FormValidator<T extends Record<string, any>> {
   private validateFields: Record<string, any> = {}
   private validateMessages: Record<string, any> = {}
   private compile?: VineValidator<any, Record<string, any> | undefined>
 
-  static rules(rules: Record<string, any>) {
+  static rules<D extends Record<string, any>>(rules: D) {
     const validate = vine.compile(vine.object(rules))
 
-    const instance = new FormValidator()
+    const instance = new FormValidator<ReturnType<typeof validate.validate>>()
     instance.compile = validate
     return instance
   }
@@ -49,7 +49,7 @@ export class FormValidator {
     return this
   }
 
-  async validate(request: Request) {
+  async validate(request: Request): Promise<T> {
     const result = await request.validateUsing(
       this.compile!,
       validateMessageProvider(this.validateMessages, this.validateFields)
