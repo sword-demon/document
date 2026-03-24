@@ -1,6 +1,7 @@
-import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 import { validateFields, validateMessage } from './lang.js'
-import type { Request } from '@adonisjs/core/http'
+import type { HttpContext, Request } from '@adonisjs/core/http'
+import { compose } from '@adonisjs/core/helpers'
 
 export const validateMessageProvider = (messages = {}, fields = {}) => {
   return {
@@ -26,17 +27,22 @@ export const formValidator = (rules: Record<string, any>, messages = {}, fields 
   }
 }
 
+type CtxType = Partial<HttpContext>
+
 export class FormValidator<T extends Record<string, any>> {
   private validateFields: Record<string, any> = {}
   private validateMessages: Record<string, any> = {}
-  private compile?: VineValidator<any, Record<string, any> | undefined>
+  // private compile?: VineValidator<any, Record<string, any> | undefined>
 
-  static rules<D extends Record<string, any>>(rules: D) {
-    const validate = vine.compile(vine.object(rules))
+  // 泛型自动推断
+  constructor(protected callback: (ctx: CtxType) => T) {}
 
-    const instance = new FormValidator<ReturnType<typeof validate.validate>>()
-    instance.compile = validate
-    return instance
+  static rules<D extends Record<string, any>>(callback: (ctx: CtxType) => D) {
+    return new FormValidator(callback)
+  }
+
+  execute<D extends Record<string, any>>(rules: D) {
+    return vine.compile(vine.object(rules))
   }
 
   messages(messages: Record<string, any>) {
@@ -49,11 +55,18 @@ export class FormValidator<T extends Record<string, any>> {
     return this
   }
 
-  async validate(request: Request): Promise<T> {
-    const result = await request.validateUsing(
-      this.compile!,
-      validateMessageProvider(this.validateMessages, this.validateFields)
-    )
-    return result
+  async validate(ctx: CtxType) {
+    const rules = this.callback(ctx)
+    const compile = this.execute(rules)
+    const messageProvider = validateMessageProvider(this.validateMessages, this.validateFields)
+    const result = await ctx.request?.validateUsing(compile, messageProvider)
+    return result as ReturnType<typeof compile.validate>
   }
+  // async validate(request: Request): Promise<T> {
+  //   const result = await request.validateUsing(
+  //     this.compile!,
+  //     validateMessageProvider(this.validateMessages, this.validateFields)
+  //   )
+  //   return result
+  // }
 }

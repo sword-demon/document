@@ -10,7 +10,7 @@ export default class CategoriesController {
   async store({ request }: HttpContext) {
     // 省事写法
     // const payload = await request.validateUsing(createCategoryValidator, categoryMessageProvider)
-    const payload = await createCategoryValidator.validate(request)
+    const payload = await createCategoryValidator.validate({ request })
     const category = await Category.create(payload)
     return category
   }
@@ -21,7 +21,7 @@ export default class CategoriesController {
   }
 
   async update({ params, request }: HttpContext) {
-    const payload = await updateCategoryValidator.validate(request)
+    const payload = await updateCategoryValidator.validate({ request })
     const category = await Category.findByOrFail(params.id)
     category.merge(payload)
     await category.save()
