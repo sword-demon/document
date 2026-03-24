@@ -11,23 +11,58 @@
 - **ORM**: Lucid
 - **验证**: VineJS
 
+## 核心特性
+
+### FormValidator 表单验证器
+
+`app/validators/zh/form_validator.ts` 封装了动态表单验证功能，支持中文字段名和验证消息：
+
+- **链式调用**: 支持 `.messages()` 自定义消息、`.fields()` 自定义字段名
+- **动态规则**: 通过回调函数根据 `HttpContext` 动态生成验证规则
+- **中文化**: 内置中文验证消息和字段名配置
+- **类型推断**: 泛型自动推断验证结果类型
+
+```typescript
+// 使用示例
+FormValidator.rules((ctx) => ({
+  name: vine.string(),
+  email: vine.email(),
+})).messages({
+  'name.required': '名称不能为空',
+}).fields({
+  name: '用户名',
+}).validate(ctx)
+```
+
 ## 项目结构
 
 ```
 /
 ├── app/
 │   ├── controllers/        # 控制器
+│   │   ├── auth_controller.ts      # 认证控制器
+│   │   ├── bases_controller.ts      # 基础控制器
+│   │   └── categories_controller.ts # 分类控制器
 │   ├── exceptions/         # 异常处理
 │   ├── middleware/         # 中间件
-│   └── models/             # 数据模型
+│   ├── models/             # 数据模型
+│   │   ├── category.ts     # 分类模型
+│   │   └── user.ts         # 用户模型
+│   └── validators/         # 验证器
+│       ├── category.ts     # 分类验证器
+│       └── zh/             # 中文验证器
+│           ├── form_validator.ts # 表单验证器
+│           └── lang.ts      # 语言验证器
 ├── bin/                    # 可执行文件
 ├── config/                 # 配置文件
-├── database/               # 数据库相关
-│   ├── factories/          # 数据工厂
+├── database/
 │   └── migrations/         # 数据库迁移
 ├── start/                  # 启动文件
+│   ├── env.ts              # 环境变量
+│   ├── kernel.ts           # HTTP 内核
+│   ├── routes.ts           # 路由定义
+│   └── validator.ts        # 验证器配置
 ├── tests/                  # 测试文件
-├── .env.example            # 环境变量示例
 ├── adonisrc.ts             # AdonisJS 配置
 ├── package.json            # 项目依赖
 └── tsconfig.json           # TypeScript 配置
@@ -121,18 +156,20 @@ npm test
 
 ### 分类管理
 
-- `GET /api/categories` - 获取所有分类
-- `POST /api/categories` - 创建新分类
-- `GET /api/categories/:id` - 获取单个分类
-- `PUT /api/categories/:id` - 更新分类
-- `DELETE /api/categories/:id` - 删除分类
+| 方法   | 路径                      | 描述           |
+|--------|--------------------------|----------------|
+| GET    | /category                | 获取所有分类     |
+| POST   | /category                | 创建新分类       |
+| GET    | /category/:id            | 获取单个分类     |
+| PUT    | /category/:id            | 更新分类         |
+| DELETE | /category/:id            | 删除分类         |
 
 ### 用户认证
 
-- `POST /api/auth/register` - 注册新用户
-- `POST /api/auth/login` - 用户登录
-- `POST /api/auth/logout` - 用户登出
-- `GET /api/auth/me` - 获取当前用户信息
+| 方法   | 路径              | 描述           |
+|--------|------------------|----------------|
+| POST   | /auth/register   | 注册新用户       |
+| POST   | /auth/login      | 用户登录         |
 
 ## 贡献指南
 
