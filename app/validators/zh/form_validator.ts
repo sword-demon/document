@@ -27,7 +27,8 @@ export const formValidator = (rules: Record<string, any>, messages = {}, fields 
   }
 }
 
-type CtxType = Partial<HttpContext>
+// 让 request 是必传的，其他的都是可选的
+type CtxType = Partial<Omit<HttpContext, 'request'>> & Pick<HttpContext, 'request'>
 
 export class FormValidator<T extends Record<string, any>> {
   private validateFields: Record<string, any> = {}
