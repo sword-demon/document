@@ -20,3 +20,12 @@ router.get('/', async () => 'welcome')
 // 动态加载，按需加载
 const CategoriesController = () => import('#controllers/categories_controller')
 router.resource('category', CategoriesController).apiOnly()
+
+const AuthController = () => import('#controllers/auth_controller')
+
+router
+  .group(() => {
+    router.post('login', [AuthController, 'login'])
+    router.post('register', [AuthController, 'register'])
+  })
+  .prefix('/auth')
