@@ -1,6 +1,6 @@
 import { UserFactory } from '#database/factories/user_factory'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import { Role } from '../../app/enums/role.js'
+import { Role } from '#enums/role'
 
 export default class extends BaseSeeder {
   async run() {
