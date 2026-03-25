@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import { middleware } from './kernel.js'
 
 router.get('/', async () => 'welcome')
 
@@ -19,7 +20,11 @@ router.get('/', async () => 'welcome')
 // 表示只有 api 路由
 // 动态加载，按需加载
 const CategoriesController = () => import('#controllers/categories_controller')
-router.resource('category', CategoriesController).apiOnly()
+// store update destroy 需要验证登录状态
+router
+  .resource('category', CategoriesController)
+  .apiOnly()
+  .use(['store', 'update', 'destroy'], middleware.auth())
 
 const AuthController = () => import('#controllers/auth_controller')
 
