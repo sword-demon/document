@@ -1,5 +1,6 @@
 import { UserFactory } from '#database/factories/user_factory'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
+import { Role } from '../../app/enums/role.js'
 
 export default class extends BaseSeeder {
   async run() {
@@ -7,10 +8,12 @@ export default class extends BaseSeeder {
     const users = await UserFactory.createMany(3)
     let user = users[0]
     user.name = 'admin'
+    user.role = Role.Admin
     await user.save()
 
     let user2 = users[1]
     user2.name = 'user'
+    user2.role = Role.User
     await user2.save()
   }
 }
