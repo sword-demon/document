@@ -24,7 +24,7 @@ const CategoriesController = () => import('#controllers/categories_controller')
 router
   .resource('category', CategoriesController)
   .apiOnly()
-  .use(['store', 'update', 'destroy'], middleware.auth())
+  .use(['store', 'update', 'destroy'], [middleware.auth(), middleware.admin()])
 
 const AuthController = () => import('#controllers/auth_controller')
 
