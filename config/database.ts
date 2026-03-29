@@ -7,7 +7,7 @@ const dbConfig = defineConfig({
   connections: {
     mysql: {
       client: 'mysql2',
-      debug: env.get('NODE_ENV') === 'development', // 开发环境开启
+      // debug: env.get('NODE_ENV') === 'development', // 开发环境开启
       connection: {
         host: env.get('DB_HOST'),
         port: env.get('DB_PORT'),
