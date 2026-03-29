@@ -1,21 +1,24 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import BasesController from './bases_controller.js'
-import hash from '@adonisjs/core/services/hash'
+import { loginValidator } from '#validators/auth'
 
 export default class AuthController extends BasesController {
   async login({ request, auth }: HttpContext) {
     const { name, password } = request.all()
     // const user = await User.findBy('name', name)
 
+    // 登录表单验证
+    await loginValidator.validate({ request })
+
     try {
       const user = await User.verifyCredentials(name, password)
-      if (!user) {
-        return this.error('用户不存在')
-      }
-      if (!(await hash.verify(user.password, password))) {
-        return this.error('密码错误')
-      }
+      // if (!user) {
+      //   return this.error('用户不存在')
+      // }
+      // if (!(await hash.verify(user.password, password))) {
+      //   return this.error('密码错误')
+      // }
       const token = await auth.use('api').createToken(user)
       return this.success('登录成功', { token, user })
     } catch (error) {
