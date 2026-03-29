@@ -49,4 +49,9 @@ export const registerValidator = FormValidator.rules(() => ({
       // console.trace(field)
       return !(await db.from('users').where('name', value).first())
     }),
-})).fields({ name: '用户名', password: '密码' })
+  password: vine.string().minLength(6).maxLength(20),
+}))
+  .fields({ name: '用户名', password: '密码' })
+  .messages({
+    'name.database.exists': '用户名已存在',
+  })
