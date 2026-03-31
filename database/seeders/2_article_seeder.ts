@@ -6,6 +6,6 @@ export default class extends BaseSeeder {
   static environment: string[] = ['development', 'testing']
   async run() {
     // Write your database queries inside the run method
-    await ArticleFactory.createMany(10)
+    await ArticleFactory.createMany(50)
   }
 }

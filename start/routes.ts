@@ -34,3 +34,9 @@ router
     router.post('register', [AuthController, 'register'])
   })
   .prefix('/auth')
+
+const ArticlesController = () => import('#controllers/articles_controller')
+router
+  .resource('article', ArticlesController)
+  .apiOnly()
+  .use(['store', 'update', 'destroy'], [middleware.admin()])
