@@ -3,6 +3,8 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import { Role } from '#enums/role'
 
 export default class extends BaseSeeder {
+  // 只允许填充在测试和开发环境
+  static environment: string[] = ['development', 'testing']
   async run() {
     // Write your database queries inside the run method
     const users = await UserFactory.createMany(3)

@@ -49,7 +49,7 @@ export const registerValidator = FormValidator.rules(() => ({
       // console.trace(field)
       return !(await db.from('users').where('name', value).first())
     }),
-  password: vine.string().minLength(6).maxLength(20),
+  password: vine.string().minLength(6).maxLength(20).confirmed(),
 }))
   .fields({ name: '用户名', password: '密码' })
   .messages({
