@@ -7,7 +7,7 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { Role } from '#enums/role'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
-  uids: ['email'],
+  uids: ['name'],
   passwordColumnName: 'password',
 })
 
